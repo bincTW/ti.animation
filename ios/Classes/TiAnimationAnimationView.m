@@ -69,8 +69,20 @@
 }
 
 - (NSDictionary *)loadAnimationFromJSON:(NSString *)file {
-  NSString *filePath = [[NSBundle mainBundle] pathForResource:[[self proxy] valueForKey:@"file"] ofType:nil inDirectory:nil];
-  NSData *data = [NSData dataWithContentsOfFile:filePath];
+
+  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+  NSString* rootPath = paths[0];
+  NSString* path = [rootPath stringByAppendingPathComponent: file];
+  path = [path stringByAppendingPathExtension:@"json"];
+  NSData *data = [NSData dataWithContentsOfFile:path];
+
+  if (!data) {
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:[[self proxy] valueForKey:@"file"] ofType:nil inDirectory:nil];
+    data = [NSData dataWithContentsOfFile:filePath];
+  }
+
+
+  //
 
   if (!data) {
     [self log:[NSString stringWithFormat:@"The specified file %@ could not be loaded.", file] forLevel:@"error"];
