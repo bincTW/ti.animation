@@ -15,7 +15,7 @@
 @implementation TiAnimationAnimationViewProxy
 
 - (NSArray *)keySequence {
-  return @[ @"file", @"contentMode", @"autoStart" ];
+  return @[ @"file", @"contentMode", @"autoStart", @"jsonString"  ];
 }
 
 - (TiAnimationAnimationView *)animationView {

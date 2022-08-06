@@ -19,17 +19,30 @@
     id file = [[self proxy] valueForKey:@"file"];
     id autoStart = [[self proxy] valueForKey:@"autoStart"];
     id contentMode = [[self proxy] valueForKey:@"contentMode"];
+    id jsonString = [[self proxy] valueForKey:@"jsonString"];
 
     ENSURE_TYPE(file, NSString);
     ENSURE_TYPE_OR_NIL(autoStart, NSNumber);
     ENSURE_TYPE_OR_NIL(contentMode, NSNumber);
+    ENSURE_TYPE_OR_NIL(jsonString, NSString);
 
-    // Handle both "file.json" and "file"
-    if ([file hasSuffix:@".json"]) {
-      file = [file stringByDeletingPathExtension];
+
+    if (jsonString)
+    {
+      NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+      _animationView = [LOTAnimationView animationFromJSON:[NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil]];
+    } else {
+
+      if ([file hasSuffix:@".json"]) {
+        file = [file stringByDeletingPathExtension];
+      }
+
+      _animationView = [LOTAnimationView animationFromJSON:[self loadAnimationFromJSON:file]];
+
     }
 
-    _animationView = [LOTAnimationView animationFromJSON:[self loadAnimationFromJSON:file]];
+    // Handle both "file.json" and "file"
+
 
     // Enable click-events
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didClickView:)];
